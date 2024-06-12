@@ -1,0 +1,15 @@
+version: "3.9"
+
+#main block inside docker compose file
+services: 
+  app:
+    build:
+      context: .
+      args:
+        - DEV=true
+    ports:
+      - "8000:8000"
+    volumes:  #way to map directories from local to docker container 
+      - ./app:/app
+    command: >  #command used to run the service
+      sh -c "python manage.py runserver 0.0.0.0:8000"
