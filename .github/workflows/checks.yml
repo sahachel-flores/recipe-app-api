@@ -1,26 +1,20 @@
 ---
-name: ci
+name: Checks
 
-on:
-  push:
-    branches:
-      - "main"
+on: [push]
 
 jobs:
-  docker:
-    runs-on: ubuntu-latest
+  test-lint:
+    name: Test and Lint
+    runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: "sahachelflores" #docker user
+          username: ${{ secrets.DOCKERHUB_USER }} #docker user
           password: ${{ secrets.DOCKERHUB_TOKEN }} #other comment again
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Test
         run: docker-compose run --rm app sh -c "python manage.py test"
       - name: Lint
