@@ -13,7 +13,7 @@ jobs:
         with:
           registry: docker.io
           username: ${{ secrets.DOCKERHUB_USER }} #docker user
-          password: ${{ secrets.DOCKERHUB_TOKEN }} #other comment again
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Test
