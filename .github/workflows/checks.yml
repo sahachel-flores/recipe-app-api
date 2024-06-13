@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        run: docker login  -u sahachelflores
         with:
-          username: ${{ secrets.DOCKERHUB_USER }} #docker user
+          #username: ${{ secrets.DOCKERHUB_USER }} #docker user
           password: ${{ secrets.DOCKERHUB_TOKEN }} #other comment again
       - name: Checkout
         uses: actions/checkout@v2
