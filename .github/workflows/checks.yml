@@ -12,8 +12,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USER }} #docker user
-          password: ${{ secrets.DOCKERHUB_TOKEN }} #other comment
-      - name: Checkout
+          password: ${{ secrets.DOCKERHUB_TOKEN }} #other comment again
+      - name: Checkout #other comment
         uses: actions/checkout@v2
       - name: Test
         run: docker-compose run --rm app sh -c "python manage.py test"
