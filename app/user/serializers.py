@@ -1,7 +1,6 @@
 """
 Serializers for the user API view
 """
-
 from django.contrib.auth import (
     get_user_model,
     authenticate,
@@ -22,7 +21,6 @@ class UserSerializer(serializers.ModelSerializer):
     sure that it's secure and correct. Then conver it to python object
     or database model.
     """
-
     # This class is where we tell djange the models, fields, and additional
     # arguments we want to pass to serilizer
     class Meta:

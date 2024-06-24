@@ -5,6 +5,7 @@ Views for the user API
 # Does that by providing a bunch of different base classes
 # that we can configure for our views. Also give us the
 # option of overwritting behavio.
+from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
@@ -32,4 +33,4 @@ class CreateTokenView(ObtainAuthToken):
     serializer_class = AuthTokenSerializer
     # Optional: it uses the default render of classes for
     # this obtain or token view
-    render_classes = api_settings.DEFAULT_RENDERER_CLASSES
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
