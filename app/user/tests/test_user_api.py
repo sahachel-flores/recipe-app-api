@@ -125,7 +125,7 @@ class PublicUserApiTest(TestCase):
         # Checking we get 400 bad request
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_retrieve_user_authentication(self):
+    def test_retrieve_user_unauthentication(self):
         """Test authentication is required for users."""
         res = self.client.get(ME_URL)
         # Testing we get unauthprized message since we did not authenticated

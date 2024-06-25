@@ -1,5 +1,5 @@
 """
-Test fof the django modification
+Tests for the django admin modifications.
 """
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -8,16 +8,16 @@ from django.test import Client
 
 
 class AdminSiteTest(TestCase):
-    "Test for Django admin."
+    """Tests for Django admin."""
 
     # Set up for creating 2 users
     def setUp(self):
-        """Create user and clien."""
+        """Create user and client."""
         # Creating superuser.
         self.client = Client()
         self.admin_user = get_user_model().objects.create_superuser(
             email='admin@example.com',
-            password='testpass123'
+            password='testpass123',
         )
         # Login as superuser.
         self.client.force_login(self.admin_user)
@@ -28,8 +28,8 @@ class AdminSiteTest(TestCase):
             name='Test User'
         )
 
-    def test_users_list(self):
-        """Test that user are listed on page."""
+    def test_users_lists(self):
+        """Test that users are listed on page."""
         # Get url which shows the list of users. Read django
         # documentation to learn how reverse works
         # URL for the changelist
@@ -42,7 +42,7 @@ class AdminSiteTest(TestCase):
         self.assertContains(res, self.user.email)
 
     def test_edit_user_page(self):
-        """Test the edit page works."""
+        """Test the edit user page works."""
         # URL for the change user page
         url = reverse('admin:core_user_change', args=[self.user.id])
         # Get URL
@@ -58,4 +58,4 @@ class AdminSiteTest(TestCase):
         # Get URL
         res = self.client.get(url)
         # Check for 200 code (successful creation)
-        self.assertAlmostEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)

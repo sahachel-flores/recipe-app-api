@@ -1,5 +1,5 @@
 """
-Django admin customization
+Django admin customization.
 """
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -10,7 +10,7 @@ from core import models
 
 # Creating new UserAdmin Class base of the deault UserAdmin class.
 class UserAdmin(BaseUserAdmin):
-    """Define the admin paged for users."""
+    """Define the admin pages for users."""
     # Order admin users by id
     ordering = ['id']
 
@@ -59,8 +59,9 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
-# Register your user model. Adding the UserAdmin part
+# Register your user model. Adding the UserAdmin field
 # is optional. However, W/out it, we would not use
 # the default userAdmin.
 # We want to use the UserAdmin we created above.
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.Recipe)

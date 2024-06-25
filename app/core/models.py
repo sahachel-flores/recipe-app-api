@@ -1,11 +1,12 @@
 """
-Database models
+Database models.
 """
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
-    PermissionsMixin
+    PermissionsMixin,
 )
 
 
@@ -16,9 +17,9 @@ class UserManager(BaseUserManager):
     # PW field is set to None in case we want to create an unusable
     # user. We can also add extra fields if we want
     def create_user(self, email, password=None, **extra_fields):
-        """Create, save and return a new user"""
+        """Create, save and return a new user."""
         if not email:
-            raise ValueError("User must have an email address.")
+            raise ValueError('User must have an email address.')
         # calling the self.mode is the same as declaring a new
         # User object, because the UserManager manages User class.
         # The we pass the email through the normalize_email method
@@ -44,6 +45,8 @@ class UserManager(BaseUserManager):
 # Abs..User Class contains functionality for auth system
 # Per..Mixin Class contains functionality for permission system
 class User(AbstractBaseUser, PermissionsMixin):
+    """User in the system."""
+
     # using emailField provided by django to to validate email
     # max_length set to max value, and want unique emails
     email = models.EmailField(max_length=255, unique=True)
@@ -59,5 +62,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     #filed for authentication
     USERNAME_FIELD = 'email'
+
+
+class Recipe(models.Model):
+    """Recipe Object."""
+    # Stored the user. Using ForeigKey because it allows us
+    # to set up a relationship between this recipe model and
+    # another model.
+    user = models.ForeignKey(
+        # passing the AUTH model we defined in our setting.py file
+        settings.AUTH_USER_MODEL,
+        # if related object is deleted, we are also cancating this
+        # change to the model. Ex delete user -> we delete its recipes too
+        on_delete=models.CASCADE,
+    )
+
+    # Populating the object's fieldss
+    title=models.CharField(max_length=255)
+    # Textfild is desiged to hold more data
+    # CharField is faster
+    description = models.TextField(blank=True)
+    time_minutes = models.IntegerField()
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    link = models.CharField(max_length=255,blank=True)
+
+    # The special method to return the string representation of this object
+    def __str__(self) -> str:
+        return self.title
 
 
