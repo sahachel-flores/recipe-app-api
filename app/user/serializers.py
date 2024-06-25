@@ -38,11 +38,24 @@ class UserSerializer(serializers.ModelSerializer):
         # new objects are created.
         # Default behavior: Create object w/ whatever values are passed in
         # New behavior: Use the create user function that we created.
-        def create(self, validated_data):
-            """Create and rretunr a user with encrypted password"""
-            # overwrite of the create models.
-            # Function will run after validation
-            return get_user_model().objects.create_user(**validated_data)
+    def create(self, validated_data):
+        """Create and retunr a user with encrypted password"""
+        # overwrite of the create models.
+        # Function will run after validation
+        return get_user_model().objects.create_user(**validated_data)
+
+
+    def update(self, instance, validated_data):
+        """Update and return user."""
+        # Getting new password
+        password = validated_data.pop('password', None)
+        # Updating the password
+        user = super().update(instance, validated_data)
+        # Checking if password was set
+        if password:
+            user.set_password(password)
+            user.save()
+        return user
 
 class AuthTokenSerializer(serializers.Serializer):
     """Serializer for the auth token"""

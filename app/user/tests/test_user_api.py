@@ -13,13 +13,15 @@ from rest_framework import status
 CREATE_USER_URL = reverse('user:create')
 # URL endpoint for creating tokens
 TOKEN_URL = reverse('user:token')
+# URL end point for retriving user
+ME_URL=reverse('user:me')
 
 
 def create_user(**params):
     """Create and return a new user."""
     return get_user_model().objects.create_user(**params)
 
-
+# This class handle the public api request
 class PublicUserApiTest(TestCase):
     """Test the public feature of the user API"""
 
@@ -30,8 +32,8 @@ class PublicUserApiTest(TestCase):
         """Test creating a user is successful"""
         # Test user data passed to the API
         payload = {
-            'email': 'new@example.com',
-            'password': 'testpass123',
+            'email': 'new@email.com',
+            'password': 'Testpass123',
             'name': 'Test Name',
         }
         # Sending post request tp create user
@@ -122,6 +124,63 @@ class PublicUserApiTest(TestCase):
         self.assertNotIn('token', res.data)
         # Checking we get 400 bad request
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_retrieve_user_authentication(self):
+        """Test authentication is required for users."""
+        res = self.client.get(ME_URL)
+        # Testing we get unauthprized message since we did not authenticated
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+# This class handle the private authentication test of the API
+class PrivateUserApiTests(TestCase):
+    """Test API requests that require authentication."""
+    def setUp(self):
+        # Creating test user
+        self.user = create_user(
+            email='example@email.com',
+            password='testpass123',
+            name='Test Name',
+        )
+        # creating client using function from rest framework
+        self.client = APIClient()
+        # Forcing authentication to specific user
+        self.client.force_authenticate(user=self.user)
+
+    def test_retrieve_profile_success(self):
+        """Test retrieving profile for logged in user."""
+        # Sending get request
+        res = self.client.get(ME_URL)
+        # Checking get method returns something successfully
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        # Checking the returned data matches our user
+        self.assertEqual(res.data, {
+            'name':self.user.name,
+            'email':self.user.email,
+        })
+
+    def test_post_me_not_allowed(self):
+        """Test POST  is not allowed for me endpoint."""
+        # Bad post request
+        res = self.client.post(ME_URL, {})
+        # Checking we can not create with above request
+        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_update_user_profile(self):
+        """Test updating the user profile for the authentication user."""
+        payload = {'name':'Updated Name', 'password' : 'newpassword123'}
+        # Seding patch request to modify database values
+        res = self.client.patch(ME_URL, payload)
+        # Refresh database
+        self.user.refresh_from_db()
+        # Checking the name matches updated name
+        self.assertEqual(self.user.name, payload['name'])
+        # Checking new passwpord
+        self.assertTrue(self.user.check_password(payload['password']))
+        # Checking 200 status code
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+
+
 
 
 
