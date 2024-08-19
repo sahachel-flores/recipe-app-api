@@ -16,7 +16,7 @@ TOKEN_URL = reverse('user:token')
 # URL end point for retriving user
 ME_URL=reverse('user:me')
 
-
+# Helper function for creating a user
 def create_user(**params):
     """Create and return a new user."""
     return get_user_model().objects.create_user(**params)

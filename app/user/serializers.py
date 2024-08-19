@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
     sure that it's secure and correct. Then conver it to python object
     or database model.
     """
-    # This class is where we tell djange the models, fields, and additional
+    # This class is where we provide django the model, fields, and additional
     # arguments we want to pass to serilizer
     class Meta:
         # Get user model
